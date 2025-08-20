@@ -20,7 +20,7 @@ const ReportChart = ({ subjects, getTotal }) => {
         return {
           name: "Phy-Bio",
           Secured: mergedTotal,
-          Max: 40, // total max for 2 subjects
+          Max: 20, // total max for 2 subjects
         };
       }
       if (idx === 5) return null; // Skip Biology row

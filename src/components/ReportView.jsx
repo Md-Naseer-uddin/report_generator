@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import ReportChart from "./ReportChart";
-import logo from "./images/logo.png"; // Assuming logo.png is in the same directory
+import logo from "./images/logo.png"; // Assuming logo.png is in src/images/
 
 const ReportView = forwardRef(
   (
@@ -41,12 +41,11 @@ const ReportView = forwardRef(
           style={{
             border: "1px solid black",
             padding: "10px",
-            // backgroundColor: "#f5b6d5", // pink shade like photo
             marginBottom: "20px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center" }}>
-            {/* Dummy Logo */}
+            {/* School Logo */}
             <div style={{ width: "80px", height: "80px", marginRight: "15px" }}>
               <img
                 src={logo}
@@ -64,8 +63,8 @@ const ReportView = forwardRef(
                 (Recognised by the Govt. of Telangana)
               </p>
               <p style={{ margin: "2px 0", fontSize: "12px" }}>
-                # AL - MASOOD COMPLEX , beside PISTA HOUSE BANDLAGUDA, Hyderabad - 500005.
-                (TS)
+                # AL - MASOOD COMPLEX , beside PISTA HOUSE BANDLAGUDA, Hyderabad
+                - 500005. (TS)
               </p>
               <p style={{ margin: "2px 0", fontSize: "12px" }}>
                 Cell: 8074048833
@@ -145,14 +144,19 @@ const ReportView = forwardRef(
           </thead>
           <tbody>
             {subjects.map((subj, idx) => {
+              let serialNo = idx + 1;
+
               // Merge Physics (index 4) and Biology (index 5)
               if (idx === 4) {
-                const mergedTotal =
-                  getTotal(subjects[4]) + getTotal(subjects[5]);
+                const phyTotal = getTotal(subjects[4]) / 2;
+                const bioTotal = getTotal(subjects[5]) / 2;
+
+                const mergedTotal = phyTotal + bioTotal; // out of 20
                 const mergedGP = getGradePoint(mergedTotal);
+
                 return (
                   <tr key="merged-6">
-                    <td>5</td>
+                    <td>5</td> {/* FIXED S.No */}
                     <td>
                       {subjects[4].name} <br /> {subjects[5].name}
                     </td>
@@ -176,15 +180,20 @@ const ReportView = forwardRef(
                 );
               }
 
-              // Skip Biology row (already merged)
-              if (idx === 6) return null;
+              // Skip Biology (already merged with Physics)
+              if (idx === 5) return null;
+
+              // Adjust serial numbers after merge
+              if (idx > 5) {
+                serialNo = idx; // shift back by 1
+              }
 
               // Normal rows
               const total = getTotal(subj);
               const gp = getGradePoint(total);
               return (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{serialNo}</td>
                   <td>{subj.name}</td>
                   <td>{subj.P}</td>
                   <td>{subj.W}</td>
@@ -202,8 +211,8 @@ const ReportView = forwardRef(
 
         {/* FOOTER */}
         <p>
-          <b>Total:</b> {grandTotal} |<b>GPA:</b> {gpa.toFixed(2)} |
-          <b>Percentage:</b> {percentage.toFixed(2)}% |<b>Overall Remark:</b>{" "}
+          <b>Total:</b> {grandTotal} | <b>GPA:</b> {gpa.toFixed(2)} |{" "}
+          <b>Percentage:</b> {percentage.toFixed(2)}% | <b>Overall Remark:</b>{" "}
           {getOverallRemark(gpa)}
         </p>
 
